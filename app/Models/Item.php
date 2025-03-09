@@ -16,6 +16,6 @@ class Item extends Model
         'nama',
         'harga',
         'markup',
-        'stock'
+        'stock',
     ];
 }
