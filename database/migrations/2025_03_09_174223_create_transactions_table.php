@@ -16,10 +16,10 @@ return new class extends Migration
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
             $table->integer('user_id')->on('users')->references('id')->nullable(false);
-            $table->foreign('item_id')->on('items')->references('id')->nullable(true);
+            $table->integer('item_id')->nullable(true);
             $table->string('jenis')->nullable(false);
             $table->string('nama')->nullable('false');
-            $table->foreign('transaction_wrapper_id')->on('transaction_wrappers')->references('id')->nullable(true);
+            $table->integer('transaction_wrapper_id')->nullable(true);
             $table->integer('cost')->nullable(true);
             $table->integer('jumlah')->nullable(false);
             $table->integer('cost_total')->nullable(false);

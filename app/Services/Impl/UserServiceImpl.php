@@ -2,17 +2,28 @@
 
 namespace App\Services\Impl;
 
+use App\Models\User;
 use App\Services\UserService;
 
 class UserServiceImpl implements UserService
 {
-    function login(string $username, $password): bool
+    function login(string $username, $password) {}
+
+    function register(string $email, $name, $password, $role = 'user'): User
     {
-        return false;
+        $user = new User([
+            'email' => $email,
+            'name' => $name,
+            'password' => md5($password),
+            'role' => $role
+        ]);
+        $user->save();
+        return $user;
     }
 
-    function registed(string $username, $password, $role): bool
+    function getUser(int $id): User
     {
-        return false;
+        $user = User::query()->find($id);
+        return $user;
     }
 }

@@ -3,11 +3,13 @@
 namespace App\Providers;
 
 use App\Services\Impl\ItemServiceImpl;
+use App\Services\Impl\UserServiceImpl;
 use App\Services\ItemService;
+use App\Services\UserService;
 use Illuminate\Contracts\Support\DeferrableProvider;
 use Illuminate\Support\ServiceProvider;
 
-class TransactionLayerServiceProvider extends ServiceProvider implements DeferrableProvider
+class TransactionLayerServiceProvider extends ServiceProvider
 {
     /**
      * Register services.
@@ -15,22 +17,14 @@ class TransactionLayerServiceProvider extends ServiceProvider implements Deferra
      * @return void
      */
 
-    public array $singletons = [
-        ItemService::class => ItemServiceImpl::class
-    ];
-
-    public function provides(): array
-    {
-        return [ItemService::class];
-    }
-
-
-
     public function register()
     {
         // item service
         $this->app->singleton(ItemService::class, function ($app) {
             return $app->make(ItemServiceImpl::class);
+        });
+        $this->app->singleton(UserService::class, function ($app) {
+            return $app->make(UserServiceImpl::class);
         });
     }
 
