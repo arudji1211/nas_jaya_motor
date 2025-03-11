@@ -5,26 +5,27 @@ namespace App\Services\Impl;
 use App\Models\TransactionWrapper;
 use App\Services\TransactionWrapperService;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 
 class TransactionWrapperServiceImpl implements TransactionWrapperService
 {
-    function getAll(): array
+    function getAll(): Collection
     {
-        $data = TransactionWrapper::query()->getAll();
+        $data = TransactionWrapper::get();
         return $data;
     }
 
     function getByID(int $id): TransactionWrapper
     {
         $data = TransactionWrapper::query()->find($id);
-        if (count($data) > 0) {
+        if ($data->id != null) {
             return $data;
         } else {
             throw new Exception("Data tidak ditemukan", 404);
         }
     }
 
-    function create(int $id, string $nama_konsumen, $plat, $status): TransactionWrapper
+    function create(string $nama_konsumen, $plat, $status): TransactionWrapper
     {
         $data = new TransactionWrapper(
             [
@@ -41,7 +42,7 @@ class TransactionWrapperServiceImpl implements TransactionWrapperService
     function updateStatus(int $id, string $status): bool
     {
         $data = $this->getByID($id);
-        if ($data['id'] != $id) {
+        if ($data['id'] != null) {
             $data['status'] = $status;
             return $data->save();
         } else {
