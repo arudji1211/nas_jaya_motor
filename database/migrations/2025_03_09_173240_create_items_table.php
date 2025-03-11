@@ -17,9 +17,9 @@ return new class extends Migration
             $table->id();
             $table->string('bar_code')->unique()->nullable(true);
             $table->string('nama')->nullable('false');
-            $table->integer('harga')->nullable(false);
-            $table->integer('markup')->nullable(true);
-            $table->integer('stock')->nullable(true);
+            $table->integer('harga')->nullable(false)->default(0);
+            $table->integer('markup')->nullable(false)->default(0);
+            $table->integer('stock')->nullable(false)->default(0);
             $table->timestamps();
         });
     }

@@ -20,7 +20,8 @@ return new class extends Migration
             $table->string('jenis')->nullable(false);
             $table->string('nama')->nullable('false');
             $table->integer('transaction_wrapper_id')->nullable(true);
-            $table->integer('cost')->nullable(true);
+            $table->integer('harga')->nullable(false)->default(0);
+            $table->integer('cost')->nullable(false)->default(0);
             $table->integer('jumlah')->nullable(false);
             $table->integer('cost_total')->nullable(false);
             $table->timestamps();

@@ -7,6 +7,7 @@ use App\Models\User;
 use App\Services\UserService;
 use App\Services\ItemService;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 
 class ItemServiceImpl implements ItemService
@@ -17,6 +18,30 @@ class ItemServiceImpl implements ItemService
     public function __construct(UserService $userServ)
     {
         $this->userService = $userServ;
+    }
+
+    function getAll(): Collection
+    {
+        $data = Item::query()->get();
+        return $data;
+    }
+
+    function getByID(int $id): Item
+    {
+        $data = Item::query()->find($id);
+        if ($data->id == null) {
+            throw new Exception("Barang tidak di temukan", 404);
+        }
+        return $data;
+    }
+
+    function getByBarcode(string $barcode): Item
+    {
+        $data = Item::query()->find($barcode, 'bar_code');
+        if ($data->id == null) {
+            throw new Exception("Barang tidak di temukan", 404);
+        }
+        return $data;
     }
 
     function create(int $user_id, string $bar_code, string $nama, int $harga, int $markup, int $stock): Item

@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Services\Impl\ItemServiceImpl;
+use App\Services\Impl\TransactionServiceImpl;
 use App\Services\Impl\TransactionWrapperServiceImpl;
 use App\Services\Impl\UserServiceImpl;
 use App\Services\ItemService;
+use App\Services\TransactionService;
 use App\Services\TransactionWrapperService;
 use App\Services\UserService;
 use Illuminate\Contracts\Support\DeferrableProvider;
@@ -30,6 +32,9 @@ class TransactionLayerServiceProvider extends ServiceProvider
         });
         $this->app->singleton(TransactionWrapperService::class, function ($app) {
             return $app->make(TransactionWrapperServiceImpl::class);
+        });
+        $this->app->singleton(TransactionService::class, function ($app) {
+            return new TransactionServiceImpl($app->make(ItemService::class));
         });
     }
 

@@ -26,10 +26,10 @@ class ItemServiceTest extends TestCase
         $this->itemService = $this->app->make(ItemService::class);
     }
 
-    public function test_create_func()
+    public function test_item_service_create()
     {
         //create items
-        $response = $this->itemService->create(1, 'aruji123', 'ban dalam', 80000, 2000, 15);
+        $response = $this->itemService->create(1, '', 'ban dalam', 100000, 5000, 5);
         $this->id_item = $response->id;
         ///echo $this->id_item;
         self::assertTrue($response->id > 0);

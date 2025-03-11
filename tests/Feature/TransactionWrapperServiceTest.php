@@ -25,7 +25,7 @@ class TransactionWrapperServiceTest extends TestCase
     public function test_transaction_wrapper_create()
     {
         //create Transaction Wrapper
-        $data = $this->transactionWrapper->create("Arudji Hermatyar", "DD 1234 SZ", "Lunas");
+        $data = $this->transactionWrapper->create("Arudji Hermatyar", "DD 1234 SZ", "Belum Lunas");
         self::assertTrue($data->id > 0);
     }
 

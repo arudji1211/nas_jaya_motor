@@ -13,11 +13,12 @@ class Transaction extends Model
 
     protected $fillable = [
         'user_id',
-        'barang_id',
+        'item_id',
         'jenis',
         'nama',
-        'transaksi_wrapper_id',
+        'transaction_wrapper_id',
         'cost',
+        'harga',
         'jumlah',
         'cost_total'
     ];
