@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('items', function (Blueprint $table) {
-            $table->id();
+            $table->bigInteger('id')->autoIncrement();
             $table->string('bar_code')->unique()->nullable(true);
             $table->string('nama')->nullable('false');
             $table->integer('harga')->nullable(false)->default(0);

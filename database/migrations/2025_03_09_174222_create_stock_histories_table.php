@@ -14,9 +14,11 @@ return new class extends Migration
     public function up()
     {
         Schema::create('stock_histories', function (Blueprint $table) {
-            $table->id();
-            $table->integer('barang_id');
+            $table->bigInteger('id')->autoIncrement();
+            $table->bigInteger('item_id');
             $table->timestamps();
+            //foreign
+            $table->foreign('item_id')->on('items')->references('id');
         });
     }
 

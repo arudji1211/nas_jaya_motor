@@ -45,7 +45,8 @@ class TransactionServiceImpl implements TransactionService
             //jadi untuk  menentukan laba cukup menghitung selisih dari variabel harga dan cost_total
             ///cek jika ternyata sudah ada barang yang sama dalam 1 transaksi wrapper
             $data_transaksi = Transaction::query()->where('transaction_wrapper_id', '=', $transaction_wrapper_id)->where('item_id', '=', $item_id)->where('jenis', '=', $jenis)->first();
-            if (isNull($data_transaksi)) {
+            if (is_null($data_transaksi)) {
+                //var_dump($data_transaksi);
                 ///bikin object
                 //tentukan cost total
                 //
@@ -68,8 +69,7 @@ class TransactionServiceImpl implements TransactionService
                     ]
                 );
             } else {
-                //tentukan cost total
-                echo "data transaksi isnot null";
+                //tentukan cost total=
                 $jumlah = $data_transaksi->jumlah + $jumlah;
 
                 //harga bahan baku

@@ -14,7 +14,7 @@ return new class extends Migration
     public function up()
     {
         Schema::create('transaction_wrappers', function (Blueprint $table) {
-            $table->id();
+            $table->bigInteger('id')->autoIncrement();
             $table->string('nama_konsumen')->nullable(false);
             $table->string('plat')->nullable(true);
             $table->string('status')->nullable(false);

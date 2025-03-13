@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class Transaction extends Model
 {
@@ -22,4 +24,19 @@ class Transaction extends Model
         'jumlah',
         'cost_total'
     ];
+
+    function Item(): HasOne
+    {
+        return $this->hasOne(Item::class, 'item_id', 'id');
+    }
+
+    function User(): HasOne
+    {
+        return $this->hasOne(User::class, 'user_id', 'id');
+    }
+
+    function TransactionWrappers(): BelongsTo
+    {
+        return $this->belongsTo(TransactionWrapper::class, 'transaction_wrapper_id', 'id');
+    }
 }

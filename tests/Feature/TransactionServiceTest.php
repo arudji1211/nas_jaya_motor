@@ -53,7 +53,7 @@ class TransactionServiceTest extends TestCase
             ],
             [
                 'user_id' => 1,
-                'item_id' => 0,
+                'item_id' => null,
                 'jenis' => 'pemasukan',
                 'nama' => 'pemasangan ban',
                 'transaction_wrapper_id' => 3,

@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 
 class StockHistory extends Model
 {
@@ -12,6 +13,11 @@ class StockHistory extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'barang_id'
+        'item_id'
     ];
+
+    function Item(): HasOne
+    {
+        return $this->hasOne(Item::class, 'item_id', 'id');
+    }
 }
