@@ -38,7 +38,7 @@ class TransactionServiceTest extends TestCase
                 'item_id' => 1,
                 'jenis' => 'pemasukan',
                 'nama' => null,
-                'transaction_wrapper_id' => 3,
+                'transaction_wrapper_id' => 1,
                 'cost' => 0,
                 'jumlah' => 2
             ],
@@ -47,7 +47,7 @@ class TransactionServiceTest extends TestCase
                 'item_id' => 2,
                 'jenis' => 'pemasukan',
                 'nama' => null,
-                'transaction_wrapper_id' => 3,
+                'transaction_wrapper_id' => 1,
                 'cost' => 0,
                 'jumlah' => 1
             ],
@@ -56,7 +56,7 @@ class TransactionServiceTest extends TestCase
                 'item_id' => null,
                 'jenis' => 'pemasukan',
                 'nama' => 'pemasangan ban',
-                'transaction_wrapper_id' => 3,
+                'transaction_wrapper_id' => 1,
                 'cost' => 100000,
                 'jumlah' => 1
             ]

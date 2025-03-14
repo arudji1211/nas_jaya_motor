@@ -6,6 +6,8 @@ use App\Models\Item;
 use App\Models\User;
 use App\Services\UserService;
 use App\Services\ItemService;
+use App\Services\StockHistoryService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
@@ -13,11 +15,13 @@ use Illuminate\Support\Arr;
 class ItemServiceImpl implements ItemService
 {
 
+    protected StockHistoryService $stockHistory;
     private UserService $userService;
 
-    public function __construct(UserService $userServ)
+    public function __construct(UserService $userServ, StockHistoryService $stockhist)
     {
         $this->userService = $userServ;
+        $this->stockHistory = $stockhist;
     }
 
     function getAll(): Collection
@@ -80,6 +84,9 @@ class ItemServiceImpl implements ItemService
 
         $increase = Item::query()->where('id', '=', $id)->increment('stock', $count);
         if ($increase == 1) {
+            $data = Item::query()->find($id);
+            $now = Carbon::now();
+            $this->stockHistory->update($id, $data->stock, $now);
             return true;
         };
         return false;
@@ -89,6 +96,9 @@ class ItemServiceImpl implements ItemService
     {
         $increase = Item::query()->where('id', '=', $id)->decrement('stock', $count);
         if ($increase == 1) {
+            $data = Item::query()->find($id);
+            $now = Carbon::now();
+            $this->stockHistory->update($id, $data->stock, $now);
             return true;
         };
         return false;

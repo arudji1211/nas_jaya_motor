@@ -29,7 +29,7 @@ class ItemServiceTest extends TestCase
     public function test_item_service_create()
     {
         //create items
-        $response = $this->itemService->create(1, '', 'ban luar', 300000, 5000, 10);
+        $response = $this->itemService->create(1, '', 'ban dalam', 100000, 3000, 10);
         $this->id_item = $response->id;
         ///echo $this->id_item;
         self::assertTrue($response->id > 0);

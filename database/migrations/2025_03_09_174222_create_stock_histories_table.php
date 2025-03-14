@@ -15,6 +15,7 @@ return new class extends Migration
     {
         Schema::create('stock_histories', function (Blueprint $table) {
             $table->bigInteger('id')->autoIncrement();
+            $table->integer('stock')->nullable(false);
             $table->bigInteger('item_id');
             $table->timestamps();
             //foreign

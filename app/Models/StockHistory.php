@@ -13,7 +13,8 @@ class StockHistory extends Model
     protected $primaryKey = 'id';
 
     protected $fillable = [
-        'item_id'
+        'item_id',
+        'stock'
     ];
 
     function Item(): HasOne
