@@ -19,7 +19,7 @@ class TransactionWrapper extends Model
     ];
 
 
-    function Transaction(): HasMany
+    function Transactions(): HasMany
     {
         return $this->hasMany(Transaction::class, 'transaction_wrapper_id', 'id');
     }

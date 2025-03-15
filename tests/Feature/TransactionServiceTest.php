@@ -65,4 +65,17 @@ class TransactionServiceTest extends TestCase
         $result = $this->transaction->createWithTransaction($data_transaksi);
         self::assertTrue($result);
     }
+
+    public function test_transaction_service_getbydate()
+    {
+        $data = $this->transaction->getByDateRange('2025-03-13', '2025-03-14');
+        //print_r($data);
+        foreach ($data as $d) {
+            if (!is_null($d->item)) {
+                echo '' . $d->item['nama'] . ' sebanyak ' . $d->jumlah . ' = Rp.' . $d->cost_total . "\r\n";
+            } else {
+                echo '' . $d->nama . ' sebanyak ' . $d->jumlah . ' = Rp.' . $d->cost_total . "\r\n";
+            }
+        }
+    }
 }

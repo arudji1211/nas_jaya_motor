@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -15,4 +16,9 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+});
+
+Route::controller(App\Http\Controllers\UserController::class)->group(function () {
+    Route::get('/item-list', 'itemList');
+    Route::get('transaction-wrapper/{id}', 'transactionWrapperDetail');
 });

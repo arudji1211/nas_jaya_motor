@@ -6,6 +6,7 @@ use App\Models\Transaction;
 use App\Models\TransactionWrapper;
 use App\Services\ItemService;
 use App\Services\TransactionService;
+use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
@@ -197,7 +198,9 @@ class TransactionServiceImpl implements TransactionService
 
     function getByDateRange($start, $end): Collection
     {
-        $data = Transaction::query()->where('updated_at', '>', $start)->where('updated_at', '<', $end)->get();
+        $tstart = Carbon::parse($start)->startOfDay();
+        $tstop = Carbon::parse($end)->endOfDay();
+        $data = Transaction::query()->with('item')->whereBetween('updated_at', [$tstart, $tstop])->get();
         return $data;
     }
 

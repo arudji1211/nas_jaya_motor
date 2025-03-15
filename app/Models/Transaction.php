@@ -27,12 +27,12 @@ class Transaction extends Model
 
     function Item(): HasOne
     {
-        return $this->hasOne(Item::class, 'item_id', 'id');
+        return $this->hasOne(Item::class, 'id', 'item_id');
     }
 
     function User(): HasOne
     {
-        return $this->hasOne(User::class, 'user_id', 'id');
+        return $this->hasOne(User::class, 'id', 'user_id');
     }
 
     function TransactionWrappers(): BelongsTo

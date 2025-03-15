@@ -17,7 +17,7 @@ class TransactionWrapperServiceImpl implements TransactionWrapperService
 
     function getByID(int $id): TransactionWrapper
     {
-        $data = TransactionWrapper::query()->find($id);
+        $data = TransactionWrapper::query()->with('transactions.item')->find($id);
         if ($data->id != null) {
             return $data;
         } else {
