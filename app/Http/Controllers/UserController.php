@@ -37,11 +37,20 @@ class UserController extends Controller
         return response()->view('pages.item_page', $data);
     }
 
-    public function transactionList(Request $request) {}
+    public function transactionList(Request $request)
+    {
+        $tr_list = $this->transactionservice->getAll();
+        $data = ['transactions' => $tr_list];
+        echo view('components.header', ['title' => 'transaction detail']);
+        return response()->view('pages.transaction_list', $data);
+    }
 
     public function transactionWrapperList(Request $request)
     {
-        return response()->view('transaction_wrapper_list');
+        $trw_list = $this->transactionwservice->getAll();
+        $data = ['transaction_wrappers' => $trw_list];
+        echo view('components.header', ['title' => 'transaction detail']);
+        return response()->view('pages.transaction_wrapper_list', $data);
     }
 
     public function transactionWrapperDetail(Request $request, string $id)

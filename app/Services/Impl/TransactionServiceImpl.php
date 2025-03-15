@@ -118,14 +118,16 @@ class TransactionServiceImpl implements TransactionService
                 throw new Exception("Gagal membuat transaksi " . $nama, 500);
             }
             return $data_transaksi;
-        } else {
+        } else if ($jenis == 'restock') {
             ///pengeluaran karena mmenambah stock
             //ambil data barang
+            //cost wajib 0 karena tidak termasuk pengeluaran namun aset
+            //sedangkan cost akan di gunakan untuk menjadi acuan pemasukan/pengeluaran bersih
             $data_barang = $this->itemService->getByID($item_id);
 
             //override nama menggunakan nama dari database item
             $nama = $data_barang->nama;
-
+            $cost = 0;
             //tentukan cost total
             $cost_total = ($data_barang->harga + $cost) * $jumlah;
 
@@ -160,6 +162,29 @@ class TransactionServiceImpl implements TransactionService
                 throw new Exception("Gagal membuat transaksi " + $nama, 500);
             }
             return $data_transaksi;
+        } else if ($jenis == 'biaya_operasional') {
+            ///ini akan mengurangi laba bersih
+            $cost_total = $cost * $jumlah;
+            $data_transaksi = new Transaction(
+                [
+                    'user_id' => $user_id,
+                    'item_id' => null,
+                    'jenis' => $jenis,
+                    'nama' => $nama,
+                    'transaction_wrapper_id' => null,
+                    'harga' => null,
+                    'cost' => $cost,
+                    'jumlah' => $jumlah,
+                    'cost_total' => $cost_total
+                ]
+            );
+            //buat data transaksi
+            if (!($data_transaksi->save())) {
+                throw new Exception("Gagal membuat transaksi " + $nama, 500);
+            }
+            return $data_transaksi;
+        } else {
+            throw new Exception("Gagal membuat transaksi " + $nama, 403);
         }
     }
 
@@ -196,11 +221,11 @@ class TransactionServiceImpl implements TransactionService
         return $data;
     }
 
-    function getByDateRange($start, $end): Collection
+    function getByDateRangeAndJenis($start, $end, $jenis): Collection
     {
         $tstart = Carbon::parse($start)->startOfDay();
         $tstop = Carbon::parse($end)->endOfDay();
-        $data = Transaction::query()->with('item')->whereBetween('updated_at', [$tstart, $tstop])->get();
+        $data = Transaction::query()->with('item')->where('jenis', '=', $jenis)->whereBetween('updated_at', [$tstart, $tstop])->get();
         return $data;
     }
 

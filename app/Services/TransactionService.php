@@ -11,7 +11,7 @@ interface TransactionService
     function create($user_id, $item_id, $jenis, $nama, $transaksi_wrapper_id, $cost, $jumlah): Transaction;
     function getAll(): Collection;
     function getByID($id): Transaction;
-    function getByDateRange(string $start, $end): Collection;
+    function getByDateRangeAndJenis(string $start, $end, $jenis): Collection;
     function updateAmount($id, $jumlah): bool;
     function delete($id): bool;
 }

@@ -20,5 +20,7 @@ Route::get('/', function () {
 
 Route::controller(App\Http\Controllers\UserController::class)->group(function () {
     Route::get('/item-list', 'itemList');
+    Route::get('/transaction-wrapper-list', 'transactionWrapperList');
+    Route::get('/transaction-list', 'transactionList');
     Route::get('transaction-wrapper/{id}', 'transactionWrapperDetail');
 });

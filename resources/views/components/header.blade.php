@@ -13,5 +13,9 @@
         .warna1 {
             background-color: #F9F6E6;
         }
+
+        .warna2 {
+            background-color: #8D77AB;
+        }
     </style>
 </head>

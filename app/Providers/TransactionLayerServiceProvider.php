@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Services\FinancialService;
+use App\Services\Impl\FinancialServiceImpl;
 use App\Services\Impl\ItemServiceImpl;
 use App\Services\Impl\StockHistoryServiceImpl;
 use App\Services\Impl\TransactionServiceImpl;
@@ -40,6 +42,9 @@ class TransactionLayerServiceProvider extends ServiceProvider
         });
         $this->app->singleton(StockHistoryService::class, function ($app) {
             return $app->make(StockHistoryServiceImpl::class);
+        });
+        $this->app->singleton(FinancialService::class, function ($app) {
+            return new FinancialServiceImpl($app->make(TransactionService::class));
         });
     }
 
