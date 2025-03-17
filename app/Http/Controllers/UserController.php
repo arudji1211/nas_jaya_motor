@@ -40,9 +40,15 @@ class UserController extends Controller
     public function transactionList(Request $request)
     {
         $tr_list = $this->transactionservice->getAll();
-        $data = ['transactions' => $tr_list];
+        $trw_list = $this->transactionwservice->getAll();
+        $data = ['transactions' => $tr_list, 'transaction_wrappers' => $trw_list];
         echo view('components.header', ['title' => 'transaction detail']);
-        return response()->view('pages.transaction_list', $data);
+        echo view('components.page_wrapper');
+        echo view('components.sidebar');
+        echo view('components.body_wrapper');
+        echo view('components.navbar');
+        echo view('pages.transaction_list', $data);
+        echo view('components.footer');
     }
 
     public function transactionWrapperList(Request $request)

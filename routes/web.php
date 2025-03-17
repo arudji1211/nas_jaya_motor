@@ -19,8 +19,8 @@ Route::get('/', function () {
 });
 
 Route::controller(App\Http\Controllers\UserController::class)->group(function () {
-    Route::get('/item-list', 'itemList');
-    Route::get('/transaction-wrapper-list', 'transactionWrapperList');
-    Route::get('/transaction-list', 'transactionList');
-    Route::get('transaction-wrapper/{id}', 'transactionWrapperDetail');
+    Route::get('user/item-list', 'itemList');
+    Route::get('user/transaction-wrapper-list', 'transactionWrapperList');
+    Route::get('user/transaction-list', 'transactionList');
+    Route::get('user/transaction-wrapper/{id}', 'transactionWrapperDetail');
 });
