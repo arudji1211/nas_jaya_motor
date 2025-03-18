@@ -4,9 +4,15 @@
         <div class="col-lg-4 d-flex align-items-stretch">
             <div class="card w-100 h-200">
                 <div class="card-body p-4 ">
-                    <div class="mb-4">
-                        <h5 class="card-title fw-semibold">Transactions Container</h5>
+                    <div class="row mb-4">
+                        <div>
+                            <h5 class="card-title fw-semibold">Transactions Container</h5>
+                        </div>
+                        <div class="text-end">
+                            <a href="{{ url('user/transaction-wrapper/create') }}" class="btn btn-primary rounded">tambah</a>
+                        </div>
                     </div>
+
                     <div class="overflow-auto">
                         <ul class="timeline-widget mb-0 position-relative mb-n5 ">
                             @foreach($transaction_wrappers as $td)
@@ -32,7 +38,15 @@
         <div class="col-lg-8 d-flex align-items-stretch">
             <div class="card w-100">
                 <div class="card-body p-4 overflow-auto">
-                    <h5 class="card-title fw-semibold mb-4">Recent Transactions</h5>
+                    <div class="mb-4">
+                        <div>
+                            <h5 class="card-title fw-semibold">Recent Transactions</h5>
+                        </div>
+                        <div class="text-end">
+                            <a href="" class="btn btn-primary rounded">tambah</a>
+                        </div>
+                    </div>
+
                     <div class="table-responsive">
                         <table class="table text-nowrap mb-0 align-middle">
                             <thead class="text-dark fs-4">

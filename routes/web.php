@@ -22,5 +22,6 @@ Route::controller(App\Http\Controllers\UserController::class)->group(function ()
     Route::get('user/item-list', 'itemList');
     Route::get('user/transaction-wrapper-list', 'transactionWrapperList');
     Route::get('user/transaction-list', 'transactionList');
+    Route::get('user/transaction-wrapper/create', 'CreateTransactionWrapper');
     Route::get('user/transaction-wrapper/{id}', 'transactionWrapperDetail');
 });

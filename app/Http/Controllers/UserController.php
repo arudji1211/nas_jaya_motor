@@ -51,6 +51,17 @@ class UserController extends Controller
         echo view('components.footer');
     }
 
+    public function CreateTransactionWrapper(Request $request)
+    {
+        echo view('components.header', ['title' => 'transaction detail']);
+        echo view('components.page_wrapper');
+        echo view('components.sidebar');
+        echo view('components.body_wrapper');
+        echo view('components.navbar');
+        echo view('pages.create_transaction_wrapper');
+        echo view('components.footer');
+    }
+
     public function transactionWrapperList(Request $request)
     {
         $trw_list = $this->transactionwservice->getAll();

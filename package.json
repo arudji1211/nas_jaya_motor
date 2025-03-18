@@ -10,13 +10,16 @@
         "production": "mix --production"
     },
     "devDependencies": {
-        "axios": "^0.25",
+        "apexcharts": "^3.37.0",
+        "axios": "^1.8.3",
+        "bootstrap": "^5.2.3",
+        "jquery": "^3.7.1",
         "laravel-mix": "^6.0.6",
         "lodash": "^4.17.19",
         "postcss": "^8.1.14",
-        "apexcharts": "^3.37.0",
-        "bootstrap": "^5.2.3",
-        "jquery": "^3.6.3",
         "sass": "^1.54.8"
+    },
+    "dependencies": {
+        "select2": "^4.1.0-rc.0"
     }
 }
