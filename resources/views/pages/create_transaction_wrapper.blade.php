@@ -1,4 +1,17 @@
 <div class="container-fluid">
+    <style>
+        .dropdown-menu {
+            width: 100%;
+            max-height: 200px;
+            overflow-y: auto;
+            display: none;
+            position: absolute;
+        }
+
+        .dropdown-menu.show {
+            display: block;
+        }
+    </style>
     <div class="row">
         <div class="col-lg-4 d-flex align-items-stretch">
             <div class="card w-100">
@@ -47,15 +60,15 @@
                         <div class="mb-3">
                             <label for="search" class="form-label">Search</label>
                             <div class="dropdown">
-                                <input type="text" id="search" class="form-control" placeholder="Ketik untuk mencari..." autocomplete="off">
-                                <ul class="dropdown-menu" id="dropdown"></ul>
+                                <input type="text" id="searchItem" class="form-control" placeholder="Ketik untuk mencari..." autocomplete="off">
+                                <ul class="dropdown-menu" id="dropdownSearch"></ul>
                             </div>
                         </div>
                         <form action="">
                             <div class="mb-3">
                                 <label for="item_name" class="form-label">Nama</label>
-                                <input type="text" name="item_name" id="item_name" aria-describedby="item_name" class="form-control">
-
+                                <input type="text" name="item_nama" id="item_nama" aria-describedby="item_nama" class="form-control">
+                                <input type="hidden" id="item_id" name="item_id">
                             </div>
                             <label for="harga" class="form-label">Harga</label>
                             <div class="mb-3 input-group" id="harga">
@@ -115,7 +128,53 @@
 
         </div>
     </div>
-
-
-
 </div>
+<script>
+    const items = @json($items);
+    const searchInput = document.getElementById("searchItem");
+    const dropdown = document.getElementById("dropdownSearch");
+    const itemIdInput = document.getElementById("item_id");
+    const itemNama = document.getElementById("item_nama");
+    const itemHarga = document.getElementById("item_harga");
+    const itemCost = document.getElementById("item_markup");
+
+    function filteritems() {
+        const searchText = searchInput.value.toLowerCase();
+        dropdown.innerHTML = "";
+
+
+        const filtereditems = items.filter(item =>
+            item.nama.toLowerCase().includes(searchText)
+        );
+
+        if (filtereditems.length === 0) {
+            dropdown.innerHTML = `<li class="dropdown-item disabled">Tidak ada hasil</li>`;
+        } else {
+            filtereditems.forEach(item => {
+                const option = document.createElement("li");
+                //console.log(item);
+                option.classList.add("dropdown-item");
+                option.textContent = item.nama;
+                option.onclick = function() {
+                    searchInput.value = item.nama;
+                    itemIdInput.value = item.id;
+                    itemNama.value = item.nama;
+                    itemHarga.value = item.harga;
+                    itemCost.value = item.markup;
+                    dropdown.classList.remove("show");
+                };
+                dropdown.appendChild(option);
+            });
+        }
+
+        dropdown.classList.toggle("show", filtereditems.length > 0);
+    }
+
+    searchInput.addEventListener("input", filteritems);
+
+    document.addEventListener("click", function(event) {
+        if (!searchInput.contains(event.target) && !dropdown.contains(event.target)) {
+            dropdown.classList.remove("show");
+        }
+    });
+</script>

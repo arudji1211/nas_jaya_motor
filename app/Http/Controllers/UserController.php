@@ -53,12 +53,15 @@ class UserController extends Controller
 
     public function CreateTransactionWrapper(Request $request)
     {
+        $items = $this->itemservice->getAll()->toArray();
+        $data = [];
+        $data['items'] = $items;
         echo view('components.header', ['title' => 'transaction detail']);
         echo view('components.page_wrapper');
         echo view('components.sidebar');
         echo view('components.body_wrapper');
         echo view('components.navbar');
-        echo view('pages.create_transaction_wrapper');
+        echo view('pages.create_transaction_wrapper', $data);
         echo view('components.footer');
     }
 
