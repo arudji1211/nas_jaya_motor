@@ -22,7 +22,7 @@
                         <form action="">
                             <div class="mb-3">
                                 <label for="nama_konsumen" class="form-label">Nama Konsumen</label>
-                                <input type="hidden" name="id" name="id" value="1">
+                                <input type="hidden" name="transactionWrapperId" id="transactionWrapperId" value="1">
                                 <input type="text" name="nama_konsumen" id="nama_konsumen" class="form-control" aria-describedby="Nama Konsumen">
                             </div>
                             <div class="mb-3">
@@ -64,7 +64,8 @@
                                 <ul class="dropdown-menu" id="dropdownSearch"></ul>
                             </div>
                         </div>
-                        <form action="">
+                        <form id="formAddTransaction">
+                            @csrf
                             <div class="mb-3">
                                 <label for="item_name" class="form-label">Nama</label>
                                 <input type="text" name="item_nama" id="item_nama" aria-describedby="item_nama" class="form-control">
@@ -130,6 +131,7 @@
     </div>
 </div>
 <script>
+    //search form
     const items = @json($items);
     const searchInput = document.getElementById("searchItem");
     const dropdown = document.getElementById("dropdownSearch");
@@ -177,4 +179,38 @@
             dropdown.classList.remove("show");
         }
     });
+</script>
+<script>
+    //tambah transaksi
+    $(document).ready(function() {
+        $('#formAddTransaction').submit(function(e) {
+            e.preventDefault();
+
+            //form data
+            var formData = {
+                _token: "{{ csrf_token() }}",
+                item_id: $('#item_id').val(),
+                jenis: "pemasukan",
+                nama: $('#item_nama').val(),
+                transaction_wrapper_id: $('#transactionWrapperId').val(),
+                cost: $('#item_harga').val(),
+                jumlah: $('#amount').val(),
+            }
+
+            console.log(formData);
+            $.ajax({
+                type: "POST",
+                url: "{{ url('user/transaction/create') }}",
+                data: formData,
+                success: function(response) {
+                    alert("Data berhasil disimpan!");
+                    $('#formAddTransaction')[0].reset(); // Reset form setelah submit
+                },
+                error: function(xhr) {
+                    alert("Terjadi kesalahan: " + xhr.responseJSON.msg);
+                }
+            })
+        })
+
+    })
 </script>

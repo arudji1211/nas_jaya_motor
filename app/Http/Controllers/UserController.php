@@ -26,6 +26,38 @@ class UserController extends Controller
         $this->transactionwservice = $trwservice;
         $this->stockhistoryservice = $sthservice;
     }
+
+    ///membuat transaksi
+    public function TransactionCreateAction(Request $request)
+    {
+        if ($request->jenis == 'pemasukan') {
+            if ($request->item_id == '') {
+                $itemid = null;
+            }
+            $data = [[
+                'user_id' => 1,
+                'item_id' => $request->item_id,
+                'jenis' => 'pemasukan',
+                'nama' => $request->nama,
+                'transaction_wrapper_id' => $request->transaction_wrapper_id,
+                'cost' => $request->cost,
+                'jumlah' => $request->jumlah
+            ]];
+
+            try {
+                $tr = $this->transactionservice->createWithTransaction($data);
+            } catch (\Throwable $th) {
+                //throw $th;
+                return response()->json(['msg' => $th->getMessage()], $th->getCode());
+            }
+
+
+            if ($tr) {
+                return response()->json(['msg' => 'Transaction berhasil ditambahkan'], 200);
+            }
+        }
+    }
+
     ////get item
     public function itemList(Request $request)
     {
