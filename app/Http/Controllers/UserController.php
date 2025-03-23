@@ -27,6 +27,8 @@ class UserController extends Controller
         $this->stockhistoryservice = $sthservice;
     }
 
+    //json response
+
     ///membuat transaksi
     public function TransactionCreateAction(Request $request)
     {
@@ -58,6 +60,13 @@ class UserController extends Controller
         }
     }
 
+    public function TransactionListWithWrapperID(Request $request, string $wrapperID)
+    {
+        $transactions = $this->transactionservice->getByWrapperID($wrapperID);
+        return response()->json(['transactions' => $transactions->toArray()], 200);
+    }
+
+    //pages response
     ////get item
     public function itemList(Request $request)
     {

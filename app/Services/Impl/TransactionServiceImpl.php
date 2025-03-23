@@ -210,6 +210,12 @@ class TransactionServiceImpl implements TransactionService
         });
     }
 
+    function getByWrapperID($id): Collection
+    {
+        $data = Transaction::query()->where('transaction_wrapper_id', '=', $id)->get();
+        return $data;
+    }
+
     function getAll(): Collection
     {
         $data = Transaction::query()->get();

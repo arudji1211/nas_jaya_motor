@@ -26,6 +26,9 @@ Route::controller(App\Http\Controllers\UserController::class)->group(function ()
     Route::get('user/transaction-wrapper/{id}', 'transactionWrapperDetail');
 
 
+    ///json response
+    ///transaction list with transactionwrapperid
+    Route::get('user/transaction-list/{id}', 'TransactionListWithWrapperID');
     ///transaction create
     Route::post('user/transaction/create', 'TransactionCreateAction');
 });

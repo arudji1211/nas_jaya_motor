@@ -23,16 +23,13 @@
                             <div class="mb-3">
                                 <label for="nama_konsumen" class="form-label">Nama Konsumen</label>
                                 <input type="hidden" name="transactionWrapperId" id="transactionWrapperId" value="1">
-                                <input type="text" name="nama_konsumen" id="nama_konsumen" class="form-control" aria-describedby="Nama Konsumen">
+                                <input type="text" name="nama_konsumen" id="nama_konsumen" class="form-control" aria-describedby="Nama Konsumen" placeholder="ketik nama konsumen...">
                             </div>
                             <div class="mb-3">
                                 <label for="plat" class="form-label">Nomor Plat </label>
-                                <input type="text" name="plat" id="plat" class="form-control" aria-describedby="plat">
+                                <input type="text" name="plat" id="plat" class="form-control" aria-describedby="plat" placeholder="ketik nomor plat konsumen...">
                             </div>
-                            <div class="mb-3">
-                                <label for="total_harga" class="form-label">Total Harga</label>
-                                <input type="number" name="total_harga" id="total_harga" class="form-control" aria-describedby="total_harga" disabled>
-                            </div>
+
                             <div class="mb-3">
                                 <label for="status" class="form-label">Status</label>
                                 <select name="status" id="status" class="form-control">
@@ -68,19 +65,19 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="item_name" class="form-label">Nama</label>
-                                <input type="text" name="item_nama" id="item_nama" aria-describedby="item_nama" class="form-control">
+                                <input type="text" name="item_nama" id="item_nama" aria-describedby="item_nama" class="form-control" placeholder="nama">
                                 <input type="hidden" id="item_id" name="item_id">
                             </div>
                             <label for="harga" class="form-label">Harga</label>
                             <div class="mb-3 input-group" id="harga">
 
-                                <label for="item_harga" class="input-group-text">Harga | Markup</label>
-                                <input type="number" class="form-control" name="item_harga" id="item_harga">
-                                <input type="number" class="form-control" name="item_markup" id="item_markup">
+                                <label for="item_harga" class="input-group-text">Modal | Markup</label>
+                                <input type="number" class="form-control" name="item_harga" id="item_harga" placeholder="modal">
+                                <input type="number" class="form-control" name="item_markup" id="item_markup" placeholder="markup">
                             </div>
                             <div class="mb-3">
                                 <label for="amount" class="form-label">Jumlah</label>
-                                <input type="Number" class="form-control" name="amount" id="amount" aria-describedby="amount">
+                                <input type="Number" class="form-control" name="amount" id="amount" aria-describedby="amount" placeholder="jumlah barang yang digunakan">
                             </div>
                             <div class="mb-2">
                                 <button type="submit" class="btn btn-primary">tambahkan</button>
@@ -122,7 +119,11 @@
                                 <h6 class="fw-semibold mb-0">action</h6>
                             </th>
                         </thead>
-                        <tbody class=""></tbody>
+                        <tbody class="" id="transactions-table">
+                            <tr>
+                                <td colspan="6" class="fw-semibold mb-0 text-center"> Load Data Transaction... </td>
+                            </tr>
+                        </tbody>
                     </table>
                 </div>
             </div>
@@ -213,4 +214,49 @@
         })
 
     })
+</script>
+<script>
+    ///request data setiap 5 detik
+    function fetchTransactions(id_transactionWr) {
+        $.ajax({
+            url: `{{ url("user/transaction-list/") }}` + "/" + String(id_transactionWr),
+            type: "GET",
+            dataType: "json",
+            success: function(data) {
+                let rows = "";
+                let hargakeseluruhan = 0;
+
+                data.transactions.forEach(function(transactions) {
+                    hargakeseluruhan += (transactions.harga + transactions.cost) * transactions.jumlah;
+                    rows +=
+                        `
+                    <tr>
+                        <td class="fw-semibold mb-0">${transactions.nama}</td>
+                        <td class="fw-semibold mb-0">${transactions.harga}</td>
+                        <td class="fw-semibold mb-0">${transactions.cost}</td>
+                        <td class="fw-semibold mb-0">${transactions.jumlah}</td>
+                        <td class="fw-semibold mb-0">${(transactions.harga + transactions.cost)* transactions.jumlah}</td>
+                        <td class="fw-semibold mb-0">
+                            <button class="btn btn-primary btn-sm rounded me-1"><i class="ti ti-plus"></i></button>
+                            <button class="btn btn-danger btn-sm rounded"><i class="ti ti-minus"></i></button>
+                        </td>
+                    </tr>
+                    `;
+                })
+                rows +=
+                    `
+                    <tr class="mt-1">
+                        <td colspan="4" class="fw-semibold mb-0"> Total Harga </td>
+                        <td colspan="2" class="fw-semibold mb-0">${hargakeseluruhan}</td>
+                    </tr>
+                `
+                $("#transactions-table").html(rows);
+            }
+        })
+    }
+
+
+    fetchTransactions($('#transactionWrapperId').val());
+
+    setInterval(fetchTransactions, 5000, $('#transactionWrapperId').val());
 </script>
