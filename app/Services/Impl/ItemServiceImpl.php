@@ -92,9 +92,23 @@ class ItemServiceImpl implements ItemService
         return false;
     }
 
-    function decrementStock(int $id, $count): bool
+    function decrementStock(int $user_id, $id, $count): bool
     {
+        $user = $this->userService->getUser($user_id);
+        if ($user['role'] != 'admin') {
+            //return false;
+            throw new Exception("Anda tidak memiliki akses", 403);
+        }
+
+        $data = Item::query()->find($id);
+        if (($data->stock - 1) < 0) {
+
+            throw new Exception("Item tidak mencukupi", 400);
+        }
+
         $increase = Item::query()->where('id', '=', $id)->decrement('stock', $count);
+
+
         if ($increase == 1) {
             $data = Item::query()->find($id);
             $now = Carbon::now();

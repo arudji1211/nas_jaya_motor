@@ -13,6 +13,6 @@ interface TransactionService
     function getByWrapperID($id): Collection;
     function getByID($id): Transaction;
     function getByDateRangeAndJenis(string $start, $end, $jenis): Collection;
-    function updateAmount($id, $jumlah): bool;
+    function updateAmount($id, $id_user, $action): bool;
     function delete($id): bool;
 }

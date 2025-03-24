@@ -23,11 +23,11 @@
                             <div class="mb-3">
                                 <label for="nama_konsumen" class="form-label">Nama Konsumen</label>
                                 <input type="hidden" name="transactionWrapperId" id="transactionWrapperId" value="1">
-                                <input type="text" name="nama_konsumen" id="nama_konsumen" class="form-control" aria-describedby="Nama Konsumen" placeholder="ketik nama konsumen...">
+                                <input type="text" name="nama_konsumen" id="nama_konsumen" class="form-control" aria-describedby="Nama Konsumen" placeholder="ketik nama konsumen..." value="{{ $transaction_wrapper['nama_konsumen']}}">
                             </div>
                             <div class="mb-3">
                                 <label for="plat" class="form-label">Nomor Plat </label>
-                                <input type="text" name="plat" id="plat" class="form-control" aria-describedby="plat" placeholder="ketik nomor plat konsumen...">
+                                <input type="text" name="plat" id="plat" class="form-control" aria-describedby="plat" placeholder="ketik nomor plat konsumen..." value="{{ $transaction_wrapper['plat']}}">
                             </div>
 
                             <div class="mb-3">
@@ -133,7 +133,9 @@
 </div>
 <script>
     //search form
-    const items = @json($items);
+    /* eslint-disable */
+    const item = @json($items);
+    /* eslint-enable */
     const searchInput = document.getElementById("searchItem");
     const dropdown = document.getElementById("dropdownSearch");
     const itemIdInput = document.getElementById("item_id");
@@ -194,7 +196,7 @@
                 jenis: "pemasukan",
                 nama: $('#item_nama').val(),
                 transaction_wrapper_id: $('#transactionWrapperId').val(),
-                cost: $('#item_harga').val(),
+                cost: $('#item_markup').val(),
                 jumlah: $('#amount').val(),
             }
 
@@ -237,8 +239,8 @@
                         <td class="fw-semibold mb-0">${transactions.jumlah}</td>
                         <td class="fw-semibold mb-0">${(transactions.harga + transactions.cost)* transactions.jumlah}</td>
                         <td class="fw-semibold mb-0">
-                            <button class="btn btn-primary btn-sm rounded me-1"><i class="ti ti-plus"></i></button>
-                            <button class="btn btn-danger btn-sm rounded"><i class="ti ti-minus"></i></button>
+                            <button class="btn btn-primary btn-sm rounded me-1 btn-action-increment" data-id="${transactions.id}"><i class="ti ti-plus"></i></button>
+                            <button class="btn btn-danger btn-sm rounded btn-action-decrement" data-id="${transactions.id}"><i class="ti ti-minus"></i></button>
                         </td>
                     </tr>
                     `;
@@ -259,4 +261,45 @@
     fetchTransactions($('#transactionWrapperId').val());
 
     setInterval(fetchTransactions, 5000, $('#transactionWrapperId').val());
+
+    $(document).ready(function() {
+        $(document).on("click", ".btn-action-increment", function() {
+            let productID = $(this).data('id');
+
+            $.ajax({
+                url: `{{ url('user/transaction') }}/${productID}/increment`,
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    fetchTransactions($('#transactionWrapperId').val());
+                },
+                error: function(xhr) {
+                    alert(xhr.responseJSON.msg);
+
+                }
+            });
+        })
+
+        $(document).on("click", ".btn-action-decrement", function() {
+            let productID = $(this).data('id');
+
+            $.ajax({
+                url: `{{ url('user/transaction') }}/${productID}/decrement`,
+                method: "POST",
+                data: {
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    console.log(data);
+                    fetchTransactions($('#transactionWrapperId').val());
+                },
+                error: function(xhr) {
+                    alert(xhr.responseJSON.msg);
+                    console.log(xhr);
+                }
+            });
+        })
+    });
 </script>

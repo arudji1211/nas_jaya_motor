@@ -9,6 +9,7 @@ use App\Services\ItemService;
 use App\Services\StockHistoryService;
 use App\Services\TransactionService;
 use App\Services\TransactionWrapperService;
+use Exception;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
@@ -48,7 +49,7 @@ class UserController extends Controller
 
             try {
                 $tr = $this->transactionservice->createWithTransaction($data);
-            } catch (\Throwable $th) {
+            } catch (Exception $th) {
                 //throw $th;
                 return response()->json(['msg' => $th->getMessage()], $th->getCode());
             }
@@ -59,6 +60,31 @@ class UserController extends Controller
             }
         }
     }
+
+    ///incrmeent jumlah pada transaksi
+    public function TransactionIncrementAction(Request $request, string $id)
+    {
+        try {
+            $this->transactionservice->updateAmount($id, 1, 'increment');
+        } catch (Exception $th) {
+            //throw $th;
+            return response()->json(['msg' => $th->getMessage()], $th->getCode());
+        }
+        return response()->json(['msg' => "Success update data"], 200);
+    }
+
+    ///decrmeent jumlah pada transaksi
+    public function TransactionDecrementAction(Request $request, string $id)
+    {
+        try {
+            $this->transactionservice->updateAmount($id, 1, 'decrement');
+        } catch (Exception $th) {
+            //throw $th;
+            return response()->json(['msg' => $th->getMessage()], $th->getCode());
+        }
+        return response()->json(['msg' => "Success update data"], 200);
+    }
+
 
     public function TransactionListWithWrapperID(Request $request, string $wrapperID)
     {
@@ -92,11 +118,13 @@ class UserController extends Controller
         echo view('components.footer');
     }
 
-    public function CreateTransactionWrapper(Request $request)
+    public function CreateTransactionWrapper(Request $request, string $id)
     {
+        $trw = $this->transactionwservice->getByID(intval($id));
         $items = $this->itemservice->getAll()->toArray();
         $data = [];
         $data['items'] = $items;
+        $data['transaction_wrapper'] = $trw->toArray();
         echo view('components.header', ['title' => 'transaction detail']);
         echo view('components.page_wrapper');
         echo view('components.sidebar');

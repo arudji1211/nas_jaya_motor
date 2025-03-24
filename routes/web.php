@@ -22,7 +22,7 @@ Route::controller(App\Http\Controllers\UserController::class)->group(function ()
     Route::get('user/item-list', 'itemList');
     Route::get('user/transaction-wrapper-list', 'transactionWrapperList');
     Route::get('user/transaction-list', 'transactionList');
-    Route::get('user/transaction-wrapper/create', 'CreateTransactionWrapper');
+    Route::get('user/transaction-wrapper/create/{id}', 'CreateTransactionWrapper');
     Route::get('user/transaction-wrapper/{id}', 'transactionWrapperDetail');
 
 
@@ -31,4 +31,8 @@ Route::controller(App\Http\Controllers\UserController::class)->group(function ()
     Route::get('user/transaction-list/{id}', 'TransactionListWithWrapperID');
     ///transaction create
     Route::post('user/transaction/create', 'TransactionCreateAction');
+    //transaction increment jumlah
+    Route::post('user/transaction/{id}/increment', 'TransactionIncrementAction');
+    //transaction derement jumlah
+    Route::post('user/transaction/{id}/decrement', 'TransactionDecrementAction');
 });

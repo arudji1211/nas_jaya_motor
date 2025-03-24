@@ -239,17 +239,37 @@ class TransactionServiceImpl implements TransactionService
         return $data;
     }
 
-    function updateAmount($id, $jumlah): bool
+    function updateAmount($id, $id_user, $action): bool
     {
-        $data = Transaction::query()->find($id);
-        $data->jumlah = $jumlah;
-        $data->cost_total = ($data->harga + $data->cost) * $jumlah;
-        //perbarui transaksi wrapper
+        $jumlah = 1;
+        if ($action == 'increment') {
+            return DB::transaction(function () use ($id, $id_user, $jumlah) {
+                $data = $this->getByID($id);
+                $data->jumlah += $jumlah;
+                $data->cost_total = ($data->harga + $data->cost) * $data->jumlah;
+                $data->save();
 
-        $result = $data->save();
-        $TW = TransactionWrapper::query()->find($data->item_id);
-        $TW->touch();
-        return $result;
+                ///increment item
+                $this->itemService->decrementStock($id_user, $data->item_id, 1);
+                $TW = TransactionWrapper::query()->find($data->item_id);
+                $TW->touch();
+
+                return true;
+            });
+        } else {
+            return DB::transaction(function () use ($id, $id_user, $jumlah) {
+                $data = $this->getByID($id);
+                $data->jumlah -= $jumlah;
+                $data->cost_total = ($data->harga + $data->cost) * $data->jumlah;
+                $data->save();
+
+                ///decrement item
+                $this->itemService->incrementStock($id_user, $data->item_id, 1);
+                $TW = TransactionWrapper::query()->find($data->item_id);
+                $TW->touch();
+                return true;
+            });
+        }
     }
 
 
