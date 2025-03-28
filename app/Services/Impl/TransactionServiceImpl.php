@@ -10,6 +10,8 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
+use Symfony\Component\VarDumper\VarDumper;
 
 use function PHPUnit\Framework\isNull;
 
@@ -92,7 +94,7 @@ class TransactionServiceImpl implements TransactionService
 
 
             ///kurangi item
-            if (!($this->itemService->decrementStock($data_barang->id, $jumlah))) {
+            if (!($this->itemService->decrementStock($user_id, $data_barang->id, $jumlah))) {
                 throw new Exception("Gagal mengurangi stock", 500);
             }
             //buat data transaksi
@@ -241,30 +243,53 @@ class TransactionServiceImpl implements TransactionService
 
     function updateAmount($id, $id_user, $action): bool
     {
+
+        Log::info("triggered | Transaction Service->updateAmount");
         $jumlah = 1;
         if ($action == 'increment') {
+            Log::info("triggered | increment condition | Transaction Service->updateAmount");
             return DB::transaction(function () use ($id, $id_user, $jumlah) {
+                Log::info("Hit |Transaction Service->updateAmount |Transaction Service->getByID");
                 $data = $this->getByID($id);
                 $data->jumlah += $jumlah;
                 $data->cost_total = ($data->harga + $data->cost) * $data->jumlah;
                 $data->save();
 
                 ///increment item
+                Log::info("Hit |Transaction Service->updateAmount |Item Service->decrementStock");
                 $this->itemService->decrementStock($id_user, $data->item_id, 1);
+                Log::info("Hit |Transaction Service->updateAmount |TransactionWrapper service->touch");
                 $TW = TransactionWrapper::query()->find($data->item_id);
                 $TW->touch();
 
                 return true;
             });
         } else {
+            Log::info("Hit | decrement condition |Transaction Service->updateAmount");
             return DB::transaction(function () use ($id, $id_user, $jumlah) {
+                Log::info("Hit | Transaction Service->updateAmount | Transaction Service->getByID");
                 $data = $this->getByID($id);
                 $data->jumlah -= $jumlah;
-                $data->cost_total = ($data->harga + $data->cost) * $data->jumlah;
-                $data->save();
+                if ($data->jumlah < 1) {
+                    Log::info("Triggered | delete transaction condition |Transaction Service->updateAmount");
+                    Log::info("Hit | Transaction Service->updateAmount | Transaction Service->delete");
+                    $delete = $this->delete($id);
+
+                    if ($delete != true) {
+                        Log::info("triggered | delete != true condition | Transaction Service->updateAmount | Transaction Service->delete");
+                        throw new Exception("Data Gagal di Hapus", 500);
+                    }
+                } else {
+                    Log::info("Triggered | increment jumlah item condition |Transaction Service->updateAmount");
+                    $data->cost_total = ($data->harga + $data->cost) * $data->jumlah;
+                    $data->save();
+                }
+
 
                 ///decrement item
+                Log::info("Hit | Transaction Service->updateAmount | Item service->incrementstock");
                 $this->itemService->incrementStock($id_user, $data->item_id, 1);
+                Log::info("Hit | Transaction Service->updateAmount | TransactionWrapper->touch");
                 $TW = TransactionWrapper::query()->find($data->item_id);
                 $TW->touch();
                 return true;
@@ -276,11 +301,22 @@ class TransactionServiceImpl implements TransactionService
 
     function delete($id): bool
     {
+        Log::info("Triggered | Transaction Service->delete");
         $data = Transaction::query()->find($id);
-        $TW = TransactionWrapper::query()->find($data->item_id);
-        $TW->touch();
+        Log::info("Success | Transaction Service->delete");
+        if ($data != null) {
+            Log::info("action | Transaction Service->delete | transaction_wrapper->touch");
+            $TW = TransactionWrapper::query()->find($data->transaction_wrapper_id);
 
-        //$data = Transaction::destroy($id);
-        return Transaction::query()->destroy($id);
+            $TW->touch();
+            Log::info("action | Transaction Service->delete | destroy data id = " . $id);
+            $del = $data->delete();
+            //DD($del);
+            Log::info("Transaction Service->delete | done");
+            return $del > 0 ? true : false;
+        }
+
+        Log::info("Transaction Service->delete | done");
+        return false;
     }
 }

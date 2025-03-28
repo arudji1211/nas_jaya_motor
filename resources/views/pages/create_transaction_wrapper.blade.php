@@ -18,21 +18,22 @@
                 <div class="card-body">
                     <h5 class="card-title fw-semibold mb-4">Transaction Container</h5>
 
-                    <div class="">
-                        <form action="">
+                    <div>
+                        <form id="formTransactionContainer">
+                            @csrf
                             <div class="mb-3">
                                 <label for="nama_konsumen" class="form-label">Nama Konsumen</label>
-                                <input type="hidden" name="transactionWrapperId" id="transactionWrapperId" value="1">
-                                <input type="text" name="nama_konsumen" id="nama_konsumen" class="form-control" aria-describedby="Nama Konsumen" placeholder="ketik nama konsumen..." value="{{ $transaction_wrapper['nama_konsumen']}}">
+                                <input type="hidden" name="transactionWrapperId" id="transactionWrapperId" value="{{ $transaction_wrapper['id']}}">
+                                <input type="text" name="nama_konsumen_input" id="nama_konsumen_input" class="form-control" aria-describedby="Nama Konsumen" placeholder="ketik nama konsumen..." value="{{ $transaction_wrapper['nama_konsumen']}}">
                             </div>
                             <div class="mb-3">
                                 <label for="plat" class="form-label">Nomor Plat </label>
-                                <input type="text" name="plat" id="plat" class="form-control" aria-describedby="plat" placeholder="ketik nomor plat konsumen..." value="{{ $transaction_wrapper['plat']}}">
+                                <input type="text" name="plat" id="plat_input" class="form-control" aria-describedby="plat" placeholder="ketik nomor plat konsumen..." value="{{ $transaction_wrapper['plat']}}">
                             </div>
 
                             <div class="mb-3">
                                 <label for="status" class="form-label">Status</label>
-                                <select name="status" id="status" class="form-control">
+                                <select name="status" id="status_input" class="form-select">
                                     <option value="Belum Lunas">Belum Lunas</option>
                                     <option value="Lunas">Lunas</option>
                                 </select>
@@ -133,9 +134,7 @@
 </div>
 <script>
     //search form
-    /* eslint-disable */
     const item = @json($items);
-    /* eslint-enable */
     const searchInput = document.getElementById("searchItem");
     const dropdown = document.getElementById("dropdownSearch");
     const itemIdInput = document.getElementById("item_id");
@@ -148,7 +147,7 @@
         dropdown.innerHTML = "";
 
 
-        const filtereditems = items.filter(item =>
+        const filtereditems = item.filter(item =>
             item.nama.toLowerCase().includes(searchText)
         );
 
@@ -184,6 +183,40 @@
     });
 </script>
 <script>
+    ///ubah status menjadi lunas
+    $(document).ready(function() {
+        $('#formTransactionContainer').submit(function(e) {
+            e.preventDefault();
+
+            //form data
+            var formData = {
+                _token: "{{ csrf_token() }}",
+                nama_konsumen: $('#nama_konsumen_input').val(),
+                plat: $('#plat_input').val(),
+                status: $('#status_input option:selected').val()
+            };
+
+            //hit server
+            $.ajax({
+                url: "{{ url('user/transaction-wrapper/' . $transaction_wrapper['id'] . '/update')}}",
+                method: 'POST',
+                data: formData,
+                success: function(response) {
+                    console.log(response);
+                    alert("Perubahan berhasil disimpan!");
+                },
+                error: function(xhr) {
+                    alert(`perubahan gagal di simpan -` + xhr.responseJSON.msg);
+                },
+            })
+
+        })
+
+
+
+    });
+</script>
+<script>
     //tambah transaksi
     $(document).ready(function() {
         $('#formAddTransaction').submit(function(e) {
@@ -200,9 +233,9 @@
                 jumlah: $('#amount').val(),
             }
 
-            console.log(formData);
+
             $.ajax({
-                type: "POST",
+                method: "POST",
                 url: "{{ url('user/transaction/create') }}",
                 data: formData,
                 success: function(response) {
@@ -222,7 +255,7 @@
     function fetchTransactions(id_transactionWr) {
         $.ajax({
             url: `{{ url("user/transaction-list/") }}` + "/" + String(id_transactionWr),
-            type: "GET",
+            method: "GET",
             dataType: "json",
             success: function(data) {
                 let rows = "";
@@ -260,7 +293,7 @@
 
     fetchTransactions($('#transactionWrapperId').val());
 
-    setInterval(fetchTransactions, 5000, $('#transactionWrapperId').val());
+    setInterval(fetchTransactions, 10000, $('#transactionWrapperId').val());
 
     $(document).ready(function() {
         $(document).on("click", ".btn-action-increment", function() {
@@ -292,12 +325,11 @@
                     _token: "{{ csrf_token() }}"
                 },
                 success: function(response) {
-                    console.log(data);
                     fetchTransactions($('#transactionWrapperId').val());
                 },
                 error: function(xhr) {
                     alert(xhr.responseJSON.msg);
-                    console.log(xhr);
+
                 }
             });
         })

@@ -9,8 +9,10 @@ use App\Services\ItemService;
 use App\Services\StockHistoryService;
 use App\Services\TransactionService;
 use App\Services\TransactionWrapperService;
+use Error;
 use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class UserController extends Controller
 {
@@ -29,6 +31,31 @@ class UserController extends Controller
     }
 
     //json response
+
+    //update Transaksi wrapper
+    public function TransactionWrapperUpdateStatusAction(Request $request, string $id)
+    {
+        $input = [];
+        try {
+            $trw = $this->transactionwservice->getByID(intval($id));
+        } catch (Exception $e) {
+            return response()->json(['msg' => $e->getMessage()], $e->getCode());
+        }
+        $input['id'] = intval($id);
+        $input['status'] = $request->status == '' ? $trw->status : $request->status;
+
+        //update
+        try {
+            $res = $this->transactionwservice->updateStatus($input['id'], $input['status']);
+        } catch (Exception $e) {
+            return response()->json(['msg' => $e->getMessage()], $e->getCode());
+        }
+        if ($res) {
+            return response()->json(['msg' => 'sukses update status transaksi', 'refresh' => true], 200);
+        } else {
+            return response()->json(['msg' => 'gagal update status transaksi', 'refresh' => false], 200);
+        }
+    }
 
     ///membuat transaksi
     public function TransactionCreateAction(Request $request)
@@ -64,20 +91,22 @@ class UserController extends Controller
     ///incrmeent jumlah pada transaksi
     public function TransactionIncrementAction(Request $request, string $id)
     {
+        Log::info("Hit Transaction Service");
         try {
             $this->transactionservice->updateAmount($id, 1, 'increment');
         } catch (Exception $th) {
             //throw $th;
+            Log::info("Error | Hit Transaction Service->updateAmount");
             return response()->json(['msg' => $th->getMessage()], $th->getCode());
         }
         return response()->json(['msg' => "Success update data"], 200);
     }
 
-    ///decrmeent jumlah pada transaksi
+    ///decrmeent jumlah pada transaksi sukses,
     public function TransactionDecrementAction(Request $request, string $id)
     {
         try {
-            $this->transactionservice->updateAmount($id, 1, 'decrement');
+            $update = $this->transactionservice->updateAmount($id, 1, 'decrement');
         } catch (Exception $th) {
             //throw $th;
             return response()->json(['msg' => $th->getMessage()], $th->getCode());

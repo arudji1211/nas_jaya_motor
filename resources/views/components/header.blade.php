@@ -7,6 +7,6 @@
     <title>aruji</title>
     <link rel="shortcut icon" type="image/png" href="{{ url('images/logos/favicon.png') }}" />
     <link rel="stylesheet" href="{{ url('css/styles.min.css') }}" />
-    <link rel="stylesheet" href="{{ url('css/select2.css') }}" />
+
     <script src="{{ url('libs/jquery/dist/jquery.min.js')}}"></script>
 </head>
