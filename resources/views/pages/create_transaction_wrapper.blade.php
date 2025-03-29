@@ -38,7 +38,7 @@
                                     <option value="Lunas">Lunas</option>
                                 </select>
                             </div>
-                            <div class="mb-2">
+                            <div class="mb-3">
                                 <button class="btn btn-primary rounded" type="submit">Simpan Transaksi</button>
                             </div>
                         </form>
@@ -66,19 +66,19 @@
                             @csrf
                             <div class="mb-3">
                                 <label for="item_name" class="form-label">Nama</label>
-                                <input type="text" name="item_nama" id="item_nama" aria-describedby="item_nama" class="form-control" placeholder="nama">
+                                <input type="text" name="item_nama" id="item_nama" aria-describedby="item_nama" class="form-control" placeholder="nama item">
                                 <input type="hidden" id="item_id" name="item_id">
                             </div>
                             <label for="harga" class="form-label">Harga</label>
                             <div class="mb-3 input-group" id="harga">
 
                                 <label for="item_harga" class="input-group-text">Modal | Markup</label>
-                                <input type="number" class="form-control" name="item_harga" id="item_harga" placeholder="modal">
                                 <input type="number" class="form-control" name="item_markup" id="item_markup" placeholder="markup">
+                                <input type="number" class="form-control" name="item_harga" id="item_harga" placeholder="modal" disabled>
                             </div>
                             <div class="mb-3">
                                 <label for="amount" class="form-label">Jumlah</label>
-                                <input type="Number" class="form-control" name="amount" id="amount" aria-describedby="amount" placeholder="jumlah barang yang digunakan">
+                                <input type="Number" class="form-control" name="amount" id="amount" aria-describedby="amount" placeholder="jumlah item yang digunakan">
                             </div>
                             <div class="mb-2">
                                 <button type="submit" class="btn btn-primary">tambahkan</button>
@@ -98,7 +98,7 @@
                         Transaction Details
                     </h5>
                 </div>
-                <div class="table-responsive">
+                <div class="table-responsive px-2">
                     <table class="table text-nowrap mb-0 align-middle">
                         <thead class="text-dark fs-4">
                             <th class="border-bottom-0">

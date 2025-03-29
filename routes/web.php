@@ -20,13 +20,16 @@ Route::get('/', function () {
 
 Route::controller(App\Http\Controllers\UserController::class)->group(function () {
     Route::get('user/item-list', 'itemList');
-    Route::get('user/transaction-wrapper-list', 'transactionWrapperList');
+    Route::get('user/transaction-wrapper', 'transactionWrapperList');
     Route::get('user/transaction-list', 'transactionList');
-    Route::get('user/transaction-wrapper/create/{id}', 'CreateTransactionWrapper');
-    Route::get('user/transaction-wrapper/{id}', 'transactionWrapperDetail');
+    //Route::get('user/transaction-wrapper/create/{id}', 'CreateTransactionWrapper');
+    //fix
+    Route::get('user/transaction-wrapper/{id}', 'CreateTransactionWrapper');
 
 
     ///json response
+    //create transaction wrapper
+    Route::post('user/transaction-wrapper/create', 'TransactionWrapperCreateAction');
     //update transaction wrapper
     Route::post('user/transaction-wrapper/{id}/update', 'TransactionWrapperUpdateStatusAction');
     ///transaction list with transactionwrapperid

@@ -114,6 +114,16 @@ class UserController extends Controller
         return response()->json(['msg' => "Success update data"], 200);
     }
 
+    public function TransactionWrapperCreateAction(Request $request)
+    {
+        try {
+            $trw = $this->transactionwservice->create($request->nama_konsumen, $request->plat, 'Belum Lunas');
+        } catch (Exception $e) {
+            return redirect('/user/transaction-wrapper');
+        }
+        return redirect("/user/transaction-wrapper/$trw->id");
+    }
+
 
     public function TransactionListWithWrapperID(Request $request, string $wrapperID)
     {
@@ -168,9 +178,14 @@ class UserController extends Controller
         $trw_list = $this->transactionwservice->getAll();
         $data = ['transaction_wrappers' => $trw_list];
         echo view('components.header', ['title' => 'transaction detail']);
+        echo view('components.page_wrapper');
+        echo view('components.sidebar');
+        echo view('components.body_wrapper');
+        echo view('components.navbar');
         return response()->view('pages.transaction_wrapper_list', $data);
     }
 
+    //tak terpakai
     public function transactionWrapperDetail(Request $request, string $id)
     {
         $trw_detail = $this->transactionwservice->getByID(intval($id));
