@@ -32,6 +32,40 @@ class UserController extends Controller
 
     //json response
 
+    //tambah stock barang
+    public function ItemRestockCreateAction(Request $request, string $id)
+    {
+
+        try {
+            //code...
+            //cek item valid atau tidak
+            $data_item = $this->itemservice->getByID($id);
+            //buat transaksi
+            $type = 'restock';
+            // transaction data
+            $transaction_data = [
+                [
+                    'user_id' => 1,
+                    'item_id' => $data_item->id,
+                    'jenis' => $type,
+                    'nama' => $data_item->nama,
+                    'transaction_wrapper_id' => null,
+                    'cost' => 0,
+                    'jumlah' => $request->amount
+                ]
+            ];
+            $tr = $this->transactionservice->createWithTransaction($transaction_data);
+        } catch (Exception $th) {
+            return response()->json(['msg' => $th->getMessage()], $th->getCode());
+        }
+
+        if ($tr) {
+            return response()->json(['msg' => 'Sukses membuat transaksi'], 200);
+        } else {
+            return response()->json(['msg' => 'Gagal membuat transaksi'], 500);
+        }
+    }
+
     //update Transaksi wrapper
     public function TransactionWrapperUpdateStatusAction(Request $request, string $id)
     {
@@ -135,12 +169,26 @@ class UserController extends Controller
     ////get item
     public function itemList(Request $request)
     {
-        $items = $this->itemservice->getAll();
+        try {
+            //code...
+            $items = $this->itemservice->getAll();
+        } catch (Exception $th) {
+            //throw $th;
+            return response()->json(['msg' => $th->getMessage()], $th->getCode());
+        }
+
         $data = [
             'items' => $items,
             'title' => 'items page'
         ];
-        return response()->view('pages.item_page', $data);
+
+        echo view('components.header', ['title' => 'transaction detail']);
+        echo view('components.page_wrapper');
+        echo view('components.sidebar');
+        echo view('components.body_wrapper');
+        echo view('components.navbar');
+        echo view('pages.item_page', $data);
+        echo view('components.footer');
     }
 
     public function transactionList(Request $request)

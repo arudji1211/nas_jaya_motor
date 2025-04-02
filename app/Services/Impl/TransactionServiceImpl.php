@@ -134,8 +134,8 @@ class TransactionServiceImpl implements TransactionService
             //override nama menggunakan nama dari database item
             $nama = $data_barang->nama;
             $cost = 0;
-            //tentukan cost total
-            $cost_total = ($data_barang->harga + $cost) * $jumlah;
+            //tentukan cost total / tidak menghitung markup karena termasuk penambahan aset
+            $cost_total = $data_barang->harga * $jumlah;
 
             //harga bahan baku
             $harga = $data_barang->harga;

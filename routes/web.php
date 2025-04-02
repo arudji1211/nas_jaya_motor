@@ -28,13 +28,15 @@ Route::controller(App\Http\Controllers\UserController::class)->group(function ()
 
 
     ///json response
+    //create transaction type restock
+    Route::post('user/item/{id}/restock', 'ItemRestockCreateAction');
     //create transaction wrapper
     Route::post('user/transaction-wrapper/create', 'TransactionWrapperCreateAction');
     //update transaction wrapper
     Route::post('user/transaction-wrapper/{id}/update', 'TransactionWrapperUpdateStatusAction');
     ///transaction list with transactionwrapperid
     Route::get('user/transaction-list/{id}', 'TransactionListWithWrapperID');
-    ///transaction create
+    ///transaction create type pemasukan
     Route::post('user/transaction/create', 'TransactionCreateAction');
     //transaction increment jumlah
     Route::post('user/transaction/{id}/increment', 'TransactionIncrementAction');

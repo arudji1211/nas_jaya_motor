@@ -94,39 +94,44 @@
         <div class="flex align-items-stretch">
             <div class="card">
                 <div class="card-body">
-                    <h5 class="card-title text-center fw-semibold">
-                        Transaction Details
-                    </h5>
+                    <div class="row">
+                        <div>
+                            <h5 class="card-title text-center fw-semibold">
+                                Transaction Details
+                            </h5>
+                        </div>
+                    </div>
+                    <div class="table-responsive px-2">
+                        <table class="table text-nowrap mb-0 align-middle">
+                            <thead class="text-dark fs-4">
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">nama</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">harga</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">cost</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">amount</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">total harga</h6>
+                                </th>
+                                <th class="border-bottom-0">
+                                    <h6 class="fw-semibold mb-0">action</h6>
+                                </th>
+                            </thead>
+                            <tbody class="" id="transactions-table">
+                                <tr>
+                                    <td colspan="6" class="fw-semibold mb-0 text-center"> Load Data Transaction... </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
-                <div class="table-responsive px-2">
-                    <table class="table text-nowrap mb-0 align-middle">
-                        <thead class="text-dark fs-4">
-                            <th class="border-bottom-0">
-                                <h6 class="fw-semibold mb-0">nama</h6>
-                            </th>
-                            <th class="border-bottom-0">
-                                <h6 class="fw-semibold mb-0">harga</h6>
-                            </th>
-                            <th class="border-bottom-0">
-                                <h6 class="fw-semibold mb-0">cost</h6>
-                            </th>
-                            <th class="border-bottom-0">
-                                <h6 class="fw-semibold mb-0">amount</h6>
-                            </th>
-                            <th class="border-bottom-0">
-                                <h6 class="fw-semibold mb-0">total harga</h6>
-                            </th>
-                            <th class="border-bottom-0">
-                                <h6 class="fw-semibold mb-0">action</h6>
-                            </th>
-                        </thead>
-                        <tbody class="" id="transactions-table">
-                            <tr>
-                                <td colspan="6" class="fw-semibold mb-0 text-center"> Load Data Transaction... </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+
             </div>
 
         </div>
@@ -202,7 +207,7 @@
                 method: 'POST',
                 data: formData,
                 success: function(response) {
-                    console.log(response);
+
                     alert("Perubahan berhasil disimpan!");
                 },
                 error: function(xhr) {

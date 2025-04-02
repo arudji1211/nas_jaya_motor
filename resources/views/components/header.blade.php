@@ -9,4 +9,5 @@
     <link rel="stylesheet" href="{{ url('css/styles.min.css') }}" />
 
     <script src="{{ url('libs/jquery/dist/jquery.min.js')}}"></script>
+
 </head>
