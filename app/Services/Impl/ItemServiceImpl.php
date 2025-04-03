@@ -11,6 +11,7 @@ use Carbon\Carbon;
 use Exception;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\Log;
 
 class ItemServiceImpl implements ItemService
 {
@@ -51,13 +52,14 @@ class ItemServiceImpl implements ItemService
     function create(int $user_id, string $bar_code, string $nama, int $harga, int $markup, int $stock): Item
     {
         //user cek
-
+        Log::info('ItemService|create|triggered');
         $user = $this->userService->getUser($user_id);
         if ($user['role'] != 'admin') {
             //return false;
             throw new Exception("Anda tidak memiliki akses", 403);
         }
 
+        Log::info('ItemService|create|triggered|create item Object');
         //create item
         $item = new Item([
             'nama' => $nama,
@@ -65,7 +67,9 @@ class ItemServiceImpl implements ItemService
             'markup' => $markup,
             'stock' => $stock
         ]);
+        Log::info('ItemService|create|triggered|save item Object');
         $item->save();
+        Log::info('ItemService|create|end');
         return $item;
     }
 

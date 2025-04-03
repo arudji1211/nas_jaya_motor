@@ -1,7 +1,7 @@
 <div class="container-fluid">
     <div class="row">
         <div class="col-lg-4 d-flex align-items-stretch">
-            <div class="card w-100 h-50">
+            <div class="card w-100">
                 <div class="card-body">
                     <h5 class="card-title fw-semibold mb-4">New Transaction Wrapper</h5>
                     <div>
@@ -23,13 +23,16 @@
                 </div>
             </div>
         </div>
-        <div class="col-lg-8 d-flex align-items-stretch">
-            <div class="card w-100 h-80 overflow-auto">
-                <div class="card-body">
+        <div class="col-lg-8 align-items-stretch">
+            <div class="card w-100">
+                <div class="card-body ">
+
                     <h5 class="card-title fw-semibold mb-4">
                         Transaction Wrapper List
                     </h5>
-                    <div class="table-responsive">
+
+
+                    <div class="table-responsive overflow-auto custom-max-height">
                         <table class="table text-nowrap mb-0 align-middle">
                             <thead class="text-dark fs-4">
                                 <th class="border-bottom mb-0">
@@ -77,9 +80,11 @@
                         </table>
 
                     </div>
+
                 </div>
             </div>
         </div>
+
     </div>
 
 </div>

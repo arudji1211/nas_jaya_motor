@@ -19,17 +19,16 @@ Route::get('/', function () {
 });
 
 Route::controller(App\Http\Controllers\UserController::class)->group(function () {
-    Route::get('user/item-list', 'itemList');
-    Route::get('user/transaction-wrapper', 'transactionWrapperList');
+
     Route::get('user/transaction-list', 'transactionList');
     //Route::get('user/transaction-wrapper/create/{id}', 'CreateTransactionWrapper');
     //fix
     Route::get('user/transaction-wrapper/{id}', 'CreateTransactionWrapper');
-
+    Route::get('user/item-list', 'itemList');
+    Route::get('user/transaction-wrapper-list', 'transactionWrapperList');
 
     ///json response
-    //create transaction type restock
-    Route::post('user/item/{id}/restock', 'ItemRestockCreateAction');
+
     //create transaction wrapper
     Route::post('user/transaction-wrapper/create', 'TransactionWrapperCreateAction');
     //update transaction wrapper
@@ -42,4 +41,11 @@ Route::controller(App\Http\Controllers\UserController::class)->group(function ()
     Route::post('user/transaction/{id}/increment', 'TransactionIncrementAction');
     //transaction derement jumlah
     Route::post('user/transaction/{id}/decrement', 'TransactionDecrementAction');
+
+
+    //item
+    //create transaction type restock
+    Route::post('user/item/{id}/restock', 'ItemRestockCreateAction');
+    //create item
+    Route::post('user/item/create', 'ItemCreateAction');
 });

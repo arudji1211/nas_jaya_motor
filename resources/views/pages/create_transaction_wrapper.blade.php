@@ -248,7 +248,7 @@
                     $('#formAddTransaction')[0].reset(); // Reset form setelah submit
                 },
                 error: function(xhr) {
-                    alert("Terjadi kesalahan: " + xhr.responseJSON.msg);
+                    alert(xhr.responseJSON.msg);
                 }
             })
         })
@@ -272,10 +272,10 @@
                         `
                     <tr>
                         <td class="fw-semibold mb-0">${transactions.nama}</td>
-                        <td class="fw-semibold mb-0">${transactions.harga}</td>
-                        <td class="fw-semibold mb-0">${transactions.cost}</td>
+                        <td class="fw-semibold mb-0">${rupiah(transactions.harga)}</td>
+                        <td class="fw-semibold mb-0">${rupiah(transactions.cost)}</td>
                         <td class="fw-semibold mb-0">${transactions.jumlah}</td>
-                        <td class="fw-semibold mb-0">${(transactions.harga + transactions.cost)* transactions.jumlah}</td>
+                        <td class="fw-semibold mb-0">${rupiah((transactions.harga + transactions.cost)* transactions.jumlah)}</td>
                         <td class="fw-semibold mb-0">
                             <button class="btn btn-primary btn-sm rounded me-1 btn-action-increment" data-id="${transactions.id}"><i class="ti ti-plus"></i></button>
                             <button class="btn btn-danger btn-sm rounded btn-action-decrement" data-id="${transactions.id}"><i class="ti ti-minus"></i></button>
@@ -286,8 +286,8 @@
                 rows +=
                     `
                     <tr class="mt-1">
-                        <td colspan="4" class="fw-semibold mb-0"> Total Harga </td>
-                        <td colspan="2" class="fw-semibold mb-0">${hargakeseluruhan}</td>
+                        <td colspan="4" class="fw-semibold mb-0"> Total harga </td>
+                        <td colspan="2" class="fw-semibold mb-0">${rupiah(hargakeseluruhan)}</td>
                     </tr>
                 `
                 $("#transactions-table").html(rows);

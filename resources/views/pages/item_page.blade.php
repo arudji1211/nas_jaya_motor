@@ -14,22 +14,28 @@
                         <form action="" id="add_item_form">
                             <div class="mb-2">
                                 <label for="nama_item_form" class="form-label">Nama</label>
-                                <input type="text" id="nama_item_form" class="form-control" placeholder="masukkan nama item">
+                                <input type="text" id="nama_item_form" class="form-control" placeholder="masukkan nama item" required>
                             </div>
                             <div class="mb-2">
                                 <label for="harga_item_form" class="form-label">Harga</label>
-                                <input type="number" id="harga_item_form" class="form-control" placeholder="masukkan harga item">
+                                <input type="number" id="harga_item_form" class="form-control" placeholder="masukkan harga item" required>
                             </div>
                             <div class="mb-2">
                                 <label for="markup_item_form" class="form-label">Markup</label>
-                                <input type="number" id="markup_item_form" class="form-control" placeholder="masukkan nilai markup per item">
+                                <input type="number" id="markup_item_form" class="form-control" placeholder="masukkan nilai markup per item" required>
                             </div>
                             <div class="mb-3">
                                 <label for="jumlah_item_form" class="form-label">Jumlah</label>
-                                <input type="number" id="jumlah_item_form" class="form-control" placeholder="masukkan jumlah item">
+                                <input type="number" id="jumlah_item_form" class="form-control" placeholder="masukkan jumlah item" value="0" disabled>
                             </div>
                             <div class="mb-2">
-                                <button id="simpan_item_form" class="btn btn-primary rounded">simpan</button>
+                                <button id="simpan_item_form" class="btn btn-primary rounded">
+                                    <span>
+                                        <i class="ti ti-device-floppy"> Simpan</i>
+                                    </span>
+
+
+                                </button>
                             </div>
                         </form>
 
@@ -47,7 +53,7 @@
                         </h5>
                     </div>
 
-                    <div class="table-responsive">
+                    <div class="table-responsive overflow-auto custom-max-height">
                         <table class="table text-nowrap mb-0 align-middle">
                             <thead class="text-dark fs-4">
                                 <th class="border-bottom-0">
@@ -76,14 +82,19 @@
                                         {{ $i->stock }}
                                     </td>
                                     <td class="fw-semibold mb-0">
-                                        {{ $i->harga }}
+                                        <script>
+                                            document.write(rupiah("{{ $i->harga }}"))
+                                        </script>
+
                                     </td>
                                     <td class="fw-semibold mb-0">
-                                        {{ $i->markup }}
+                                        <script>
+                                            document.write(rupiah("{{ $i->markup }}"))
+                                        </script>
                                     </td>
                                     <td class="text-middle">
                                         <div class="input-group">
-                                            <input type="number" class="stock-form-update form-control">
+                                            <input type="number" class="stock-form-update form-control" placeholder="masukkan jumlah item">
                                             <button class="btn btn-primary btn-action-update" data-id="{{ $i->id }}">
                                                 <i class="ti ti-square-plus"></i>
                                             </button>
@@ -126,4 +137,33 @@
             }
         })
     });
+</script>
+<script>
+    //buat item baru
+    $(document).ready(function() {
+        $('#add_item_form').submit(function(e) {
+            e.preventDefault();
+
+            ///form data
+            var formData = {
+                _token: "{{ csrf_token() }}",
+                harga: $('#harga_item_form').val(),
+                markup: $('#markup_item_form').val(),
+                nama: $('#nama_item_form').val(),
+            }
+
+            $.ajax({
+                method: "POST",
+                url: `{{ url("user/item/create")}}`,
+                data: formData,
+                success: function(response) {
+                    location.reload();
+
+                },
+                error: function(xhr) {
+                    alert(xhr.responseJSON.msg);
+                }
+            })
+        })
+    })
 </script>

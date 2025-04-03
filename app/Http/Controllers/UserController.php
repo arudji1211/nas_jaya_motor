@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Item;
 use App\Models\Transaction;
 use App\Models\TransactionWrapper;
 use App\Services\ItemService;
@@ -31,6 +32,31 @@ class UserController extends Controller
     }
 
     //json response
+
+
+    //buat item baru
+    public function ItemCreateAction(Request $request)
+    {
+        try {
+            //code...
+            ///new item
+            $data = [
+                'nama' => $request->nama,
+                'harga' => $request->harga,
+                'markup' => $request->markup,
+                'stock' => 0,
+            ];
+
+            ///hit service
+            Log::info('Controller|ItemCreateAction|Hit|ItemService|');
+            $tr = $this->itemservice->create(1, '', $data['nama'], $data['harga'], $data['markup'], $data['stock']);
+        } catch (Exception $th) {
+            //throw $th;
+            return response()->json(['msg' => $th->getMessage()], $th->getCode());
+        }
+
+        return response()->json(['msg' => 'Success Create Item'], 200);
+    }
 
     //tambah stock barang
     public function ItemRestockCreateAction(Request $request, string $id)
@@ -230,7 +256,8 @@ class UserController extends Controller
         echo view('components.sidebar');
         echo view('components.body_wrapper');
         echo view('components.navbar');
-        return response()->view('pages.transaction_wrapper_list', $data);
+        echo view('pages.transaction_wrapper_list', $data);
+        echo view('components.footer');
     }
 
     //tak terpakai
