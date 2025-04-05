@@ -8,6 +8,7 @@ use App\Services\ItemService;
 use App\Services\TransactionService;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
@@ -26,6 +27,7 @@ class TransactionServiceImpl implements TransactionService
 
     function create($user_id, $item_id, $jenis, $nama, $transaction_wrapper_id, $cost, $jumlah): Transaction
     {
+        Log::info('Transaction Service|createWithTransaction|create|Running');
         if ($item_id != null and $jenis == 'pemasukan') {
 
             //pemasukan berasal dari barang
@@ -169,6 +171,7 @@ class TransactionServiceImpl implements TransactionService
             }
             return $data_transaksi;
         } else if ($jenis == 'biaya_operasional') {
+            Log::info('Transaction Service|createWithTransaction|create|Biaya_operasional|running');
             ///ini akan mengurangi laba bersih
             $cost_total = $cost * $jumlah;
             $data_transaksi = new Transaction(
@@ -177,17 +180,21 @@ class TransactionServiceImpl implements TransactionService
                     'item_id' => null,
                     'jenis' => $jenis,
                     'nama' => $nama,
-                    'transaction_wrapper_id' => null,
-                    'harga' => null,
+                    'transaction_wrapper_id' => $transaction_wrapper_id,
+                    'harga' => 0,
                     'cost' => $cost,
                     'jumlah' => $jumlah,
                     'cost_total' => $cost_total
                 ]
             );
+            Log::info('Transaction Service|createWithTransaction|create|Biaya_operasional|running|Create Data Transaksi Success');
             //buat data transaksi
+            Log::info('Transaction Service|createWithTransaction|create|Biaya_operasional|Hit|ORM Save data transaksi');
             if (!($data_transaksi->save())) {
+                Log::info('Transaction Service|createWithTransaction|create|Biaya_operasional|Hit|ORM Save data transaksi|error');
                 throw new Exception("Gagal membuat transaksi " + $nama, 500);
             }
+            Log::info('Transaction Service|createWithTransaction|create|Biaya_operasional|Hit|ORM Save data transaksi|Success');
             return $data_transaksi;
         } else {
             throw new Exception("Gagal membuat transaksi " + $nama, 403);
@@ -214,13 +221,13 @@ class TransactionServiceImpl implements TransactionService
 
     function getByWrapperID($id): Collection
     {
-        $data = Transaction::query()->where('transaction_wrapper_id', '=', $id)->get();
+        $data = Transaction::query()->where('transaction_wrapper_id', '=', $id)->orderBy('created_at', 'desc')->get();
         return $data;
     }
 
     function getAll(): Collection
     {
-        $data = Transaction::query()->get();
+        $data = Transaction::query()->orderBy('created_at', 'desc')->get();
         return $data;
     }
 

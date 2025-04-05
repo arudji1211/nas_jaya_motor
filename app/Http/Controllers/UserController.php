@@ -58,6 +58,35 @@ class UserController extends Controller
         return response()->json(['msg' => 'Success Create Item'], 200);
     }
 
+    public function biayaOperasionalCreateAction(Request $request)
+    {
+        Log::info('biayaOperasionalCreateAction|running');
+        try {
+            $type = 'biaya_operasional';
+            $transaction_data = [
+                [
+                    'user_id' => 1,
+                    'item_id' => null,
+                    'jenis' => $type,
+                    'nama' => $request->nama,
+                    'transaction_wrapper_id' => null,
+                    'cost' => $request->cost,
+                    'jumlah' => $request->jumlah,
+                ]
+            ];
+            Log::info('biayaOperasionalCreateAction|Hit|Transaction Service|createWithTransaction');
+            $tr = $this->transactionservice->createWithTransaction($transaction_data);
+        } catch (Exception $th) {
+            return response()->json(['msg' => $th->getMessage()], $th->getCode());
+        }
+
+        if ($tr) {
+            return response()->json(['msg' => 'Sukses membuat transaksi'], 200);
+        } else {
+            return response()->json(['msg' => 'Gagal membuat transaksi'], 500);
+        }
+    }
+
     //tambah stock barang
     public function ItemRestockCreateAction(Request $request, string $id)
     {
@@ -195,6 +224,7 @@ class UserController extends Controller
     ////get item
     public function itemList(Request $request)
     {
+        $perPage = 10;
         try {
             //code...
             $items = $this->itemservice->getAll();
@@ -219,9 +249,10 @@ class UserController extends Controller
 
     public function transactionList(Request $request)
     {
-        $tr_list = $this->transactionservice->getAll();
-        $trw_list = $this->transactionwservice->getAll();
-        $data = ['transactions' => $tr_list, 'transaction_wrappers' => $trw_list];
+        $perPage = 10;
+        $tr_list = Transaction::query()->orderBy('created_at', 'desc')->paginate($perPage);
+        //$trw_list = $this->transactionwservice->getAll();
+        $data = ['transactions' => $tr_list];
         echo view('components.header', ['title' => 'transaction detail']);
         echo view('components.page_wrapper');
         echo view('components.sidebar');

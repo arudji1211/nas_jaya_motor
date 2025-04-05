@@ -5,29 +5,31 @@
             <div class="card w-100">
                 <div class="card-body p-4">
                     <div class="row mb-4">
+                        <div class="mb-2">
+                            <h5 class="card-title fw-semibold">Operational Cost</h5>
+                        </div>
                         <div>
-                            <h5 class="card-title fw-semibold">Transactions Container</h5>
-                        </div>
-                        <div class="text-end">
-                            <button class="btn btn-primary rounded" data-bs-toggle="modal" data-bs-target="#transaction_wrapper_create_modal">tambah</button>
-                        </div>
-                    </div>
-
-                    <div class="overflow-auto custom-max-height">
-                        <ul class="timeline-widget mb-0 position-relative mb-n5 ">
-                            @foreach($transaction_wrappers as $td)
-                            <li class="timeline-item d-flex position-relative overflow-hidden">
-                                <div class="timeline-time text-dark flex-shrink-0 text-end">{{$td->plat}}</div>
-                                <div class="timeline-badge-wrap d-flex flex-column align-items-center">
-                                    <span class="timeline-badge border-2 border <?= $td->status == 'Lunas' ? 'border-primary' : 'border-danger'; ?> flex-shrink-0 my-8"></span>
-                                    <span class="timeline-badge-border d-block flex-shrink-0"></span>
+                            <form id="formAddTransaction">
+                                <div class="mb-2">
+                                    <label for="namaForm" class="form-label">Nama</label>
+                                    <input type="text" id="namaForm" name="namaForm" placeholder="Masukkan nama biaya operasional" class="form-control" required>
                                 </div>
-                                <div class="timeline-desc fs-3 text-dark mt-n1"><a href="{{ url('user/transaction-wrapper/' . $td->id); }}" class="text-dark">Transaction from {{$td->nama_konsumen}}</a></div>
-
-                            </li>
-                            @endforeach
-                        </ul>
+                                <div class="mb-2">
+                                    <label for="costForm" class="form-label">Cost</label>
+                                    <input type="number" id="costForm" class="form-control" placeholder="Masukkkan cost yang dikeluarkan" required>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="jumlahForm" class="form-label">Jumlah</label>
+                                    <input type="number" id="jumlahForm" class="form-control" placeholder="isi 1 jika biaya operasional tidak berkelipatan" required>
+                                </div>
+                                <div class="mb-2">
+                                    <button type="submit" class="btn btn-primary"> simpan </button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
+
+
 
                 </div>
             </div>
@@ -41,7 +43,7 @@
                         </div>
                     </div>
 
-                    <div class="table-responsive overflow-auto custom-max-height">
+                    <div class="table-responsive overflow-auto custom-max-height mb-2">
                         <table class="table text-nowrap mb-0 align-middle">
                             <thead class="text-dark fs-4">
                                 <th class="border-bottom-0">
@@ -120,38 +122,52 @@
                             </tbody>
 
                         </table>
+
+
+                    </div>
+                    <div class="pagination">
+                        {{ $transactions->links('vendor.pagination.bootstrap-5') }}
                     </div>
                 </div>
             </div>
         </div>
     </div>
-    <div class="modal fade" id="transaction_wrapper_create_modal" tabindex="-1">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h1 class="modal-title fs-5">Tambah Transaction Wrapper</h1>
-                    <button class="btn-close" data-bs-dismiss="modal" type="button"></button>
-                </div>
-                <div class="modal-body">
-                    <form action="">
-                        <div class="mb-3">
-                            @csrf
-                            <label for="nama_konsumen_form" class="form-label">Nama Konsumen</label>
-                            <input type="text" name="nama_konsumen_form" id="nama_konsumen_form" class="form-control">
-                        </div>
-                        <div class="mb-3">
-                            <label for="plat_form" class="form-label">Nomor Plat</label>
-                            <input type="number" name="plat_form" id="plat_form" class="form-control">
-                        </div>
+    <script>
+        ///ubah status menjadi lunas
+        $(document).ready(function() {
+            $('#formAddTransaction').submit(function(e) {
+                e.preventDefault();
 
-                    </form>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
-                    <button type="button" class="btn btn-primary">Create</button>
-                </div>
-            </div>
-        </div>
+                //form data
+                var formData = {
+                    _token: "{{ csrf_token() }}",
+                    item_id: null,
+                    nama: $('#namaForm').val(),
+                    cost: $('#costForm').val(),
+                    harga: 0,
+                    jenis: 'biaya_operasional',
+                    transaction_wrapper_id: null,
+                    jumlah: $('#jumlahForm').val()
+                };
 
-    </div>
+                //hit server
+                $.ajax({
+                    url: "{{ url('user/transaction/create/biaya_operasional') }}",
+                    method: 'POST',
+                    data: formData,
+                    success: function(response) {
+
+                        alert("Transaksi berhasil disimpan!");
+                    },
+                    error: function(xhr) {
+                        alert(`Transaksi gagal di simpan -` + xhr.responseJSON.msg);
+                    },
+                })
+
+            })
+
+
+
+        });
+    </script>
 </div>

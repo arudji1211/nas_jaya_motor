@@ -22,6 +22,7 @@ Route::controller(App\Http\Controllers\UserController::class)->group(function ()
 
     Route::get('user/transaction-list', 'transactionList');
     //Route::get('user/transaction-wrapper/create/{id}', 'CreateTransactionWrapper');
+    Route::get('user/', 'Dashboard');
     //fix
     Route::get('user/transaction-wrapper/{id}', 'CreateTransactionWrapper');
     Route::get('user/item-list', 'itemList');
@@ -48,4 +49,8 @@ Route::controller(App\Http\Controllers\UserController::class)->group(function ()
     Route::post('user/item/{id}/restock', 'ItemRestockCreateAction');
     //create item
     Route::post('user/item/create', 'ItemCreateAction');
+
+
+    //biaya operasional
+    Route::post('user/transaction/create/biaya_operasional', 'biayaOperasionalCreateAction');
 });

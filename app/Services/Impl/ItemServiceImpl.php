@@ -9,6 +9,7 @@ use App\Services\ItemService;
 use App\Services\StockHistoryService;
 use Carbon\Carbon;
 use Exception;
+use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Facades\Log;
@@ -27,7 +28,7 @@ class ItemServiceImpl implements ItemService
 
     function getAll(): Collection
     {
-        $data = Item::query()->get();
+        $data = Item::query()->orderBy('created_at', 'desc')->get();
         return $data;
     }
 

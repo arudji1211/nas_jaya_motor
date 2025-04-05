@@ -246,6 +246,7 @@
                 success: function(response) {
                     alert("Data berhasil disimpan!");
                     $('#formAddTransaction')[0].reset(); // Reset form setelah submit
+                    fetchTransactions($('#transactionWrapperId').val());
                 },
                 error: function(xhr) {
                     alert(xhr.responseJSON.msg);

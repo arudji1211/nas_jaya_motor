@@ -11,7 +11,7 @@ class TransactionWrapperServiceImpl implements TransactionWrapperService
 {
     function getAll(): Collection
     {
-        $data = TransactionWrapper::get();
+        $data = TransactionWrapper::orderBy('created_at', 'desc')->get();
         return $data;
     }
 
